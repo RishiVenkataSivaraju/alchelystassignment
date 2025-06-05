@@ -9,7 +9,7 @@ process.env.TZ = 'Asia/Kolkata';  // For IST timezone
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
-
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 
 const jobRoutes = require('./routes/jobRoutes');
