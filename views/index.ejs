@@ -1,72 +1,232 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Job Scheduler</title>
+
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        form { margin-bottom: 30px; }
-        label { display: block; margin-top: 10px; }
-        input, select { padding: 6px; width: 250px; }
-        table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .form-container {
+            width: 400px;
+            background: linear-gradient(#212121, #212121) padding-box,
+                linear-gradient(145deg, transparent 35%, #e81cff, #40c9ff) border-box;
+            border: 2px solid transparent;
+            padding: 32px 24px;
+            font-size: 14px;
+            font-family: inherit;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-sizing: border-box;
+            border-radius: 16px;
+            margin-bottom: 50px;
+        }
+
+        .form-container button:active {
+            scale: 0.95;
+        }
+
+        .form-container .form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-container .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .form-container .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #717171;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .form-container .form-group input,
+        .form-container .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #fff;
+            font-family: inherit;
+            background-color: transparent;
+            border: 1px solid #414141;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .form-container .form-group input::placeholder {
+            opacity: 0.5;
+        }
+
+        .form-container .form-group input:focus,
+        .form-container .form-group select:focus {
+            outline: none;
+            border-color: #e81cff;
+        }
+
+        .form-container .form-submit-btn {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            align-self: flex-start;
+            font-family: inherit;
+            color: #717171;
+            font-weight: 600;
+            width: 40%;
+            background: #313131;
+            border: 1px solid #414141;
+            padding: 12px 16px;
+            font-size: inherit;
+            gap: 8px;
+            margin-top: 8px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        .form-container .form-submit-btn:hover {
+            background-color: #fff;
+            border-color: #fff;
+            color: #212121;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            max-width: 700px;
+            margin-top: 20px;
+            background-color: #212121;
+            border-radius: 10px;
+            overflow: hidden;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #414141;
+            color: #ccc;
+            text-align: left;
+        }
+
+        th {
+            background-color: #313131;
+            font-weight: 600;
+            color: #e81cff;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .form-container .form-group select {
+            color: black;
+        }
     </style>
+
     <script>
-        const toggleInputs = () => {
+        function toggleInputs() {
             const type = document.getElementById('type').value;
-            document.getElementById('timeField').style.display = type === 'hourly' ? 'block' : 'block';
+            document.getElementById('timeLabel').innerText =
+                type === 'hourly' ? 'Minute (0–59)' : 'Time (HH:MM)';
             document.getElementById('dayField').style.display = type === 'weekly' ? 'block' : 'none';
-            document.getElementById('timeLabel').innerText = type === 'hourly' ? 'Minute (0-59)' : 'Time (HH:MM)';
-        };
+        }
     </script>
 </head>
+
 <body>
+
     <h1>Job Scheduler</h1>
 
-    <form action="/jobs" method="POST" oninput="toggleInputs()">
-        <label for="name">Job Name</label>
-        <input type="text" name="name" required />
+    <div class="form-container">
+        <form class="form" action="/jobs" method="POST">
+            <div class="form-group">
+                <label for="name">Job Name</label>
+                <input type="text" id="name" name="name" placeholder="e.g., HourlyJob1" required />
+            </div>
 
-        <label for="type">Type</label>
-        <select name="type" id="type" required onchange="toggleInputs()">
-            <option value="">-- Select Type --</option>
-            <option value="hourly">Hourly</option>
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-        </select>
+            <div class="form-group">
+                <label for="type">Type</label>
+                <select id="type" name="type" onchange="toggleInputs()" required>
+                    <option value="">-- Select Type --</option>
+                    <option value="hourly">Hourly</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                </select>
+            </div>
 
-        <div id="timeField">
-            <label id="timeLabel" for="time">Time</label>
-            <input type="text" name="time" placeholder="e.g., 15 or 14:30" required />
-        </div>
+            <div class="form-group" id="timeField">
+                <label id="timeLabel" for="time">Time</label>
+                <input type="text" id="time" name="time" placeholder="15 or 14:30" required />
+            </div>
 
-        <div id="dayField" style="display:none;">
-            <label for="dayOfWeek">Day of Week (0=Sun, 6=Sat)</label>
-            <input type="number" name="dayOfWeek" min="0" max="6" />
-        </div>
+            <div class="form-group" id="dayField" style="display:none;">
+                <label for="dayOfWeek">Day of Week (0 = Sun, 6 = Sat)</label>
+                <input type="number" id="dayOfWeek" name="dayOfWeek" min="0" max="6" />
+            </div>
 
-        <label for="output">Output</label>
-        <select name="output" required>
-            <option value="console">Console</option>
-            <option value="file">File</option>
-        </select>
+            <div class="form-group">
+                <label for="output">Output</label>
+                <select name="output" required>
+                    <option value="console">Console</option>
+                    <option value="file">File</option>
+                </select>
+            </div>
 
-        <br><br>
-        <button type="submit">Create Job</button>
-    </form>
+            <button class="form-submit-btn" type="submit">Create Job</button>
+        </form>
+    </div>
 
     <h2>Scheduled Jobs</h2>
     <table>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Next Run</th>
-        </tr>
-        <% jobs.forEach(job => { %>
+        <thead>
             <tr>
-                <td><%= job.name %></td>
-                <td><%= job.type %></td>
-                <td><%= job.nextRun %></td>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Next Run</th>
             </tr>
-        <% }); %>
+        </thead>
+        <tbody>
+            <% jobs.forEach(job=> { %>
+                <tr>
+                    <td>
+                        <%= job.name %>
+                    </td>
+                    <td>
+                        <%= job.type %>
+                    </td>
+                    <td>
+                        <%= job.nextRun %>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
     </table>
+
 </body>
+
 </html>
