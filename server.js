@@ -6,6 +6,13 @@ app.use(express.json());
 
 process.env.TZ = 'Asia/Kolkata';  // For IST timezone
 
+
+
+const jobRoutes = require('./routes/jobRoutes');
+
+app.use("/jobs", jobRoutes);
+
+
 app.post('/schedule', (req, res) => {
     try {
         const { name, type, time, dayOfWeek, output } = req.body;

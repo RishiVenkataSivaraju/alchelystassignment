@@ -4,11 +4,11 @@ const helloWorldJob = require('./jobs/helloWorldJob');  // adjust path as needed
 const jobStore = [];
 
 function listJobs() {
-  return jobStore.map(j => ({
-    name: j.name,
-    type: j.type,
-    nextRun: j.job.nextInvocation()
-  }));
+    return jobStore.map(j => ({
+        name: j.name,
+        type: j.type,
+        nextRun: j.job.nextInvocation()
+    }));
 }
 
 function scheduleJob({ name, type, time, dayOfWeek, output }) {
@@ -42,4 +42,25 @@ function scheduleJob({ name, type, time, dayOfWeek, output }) {
     return job;
 }
 
+function runNow(name) {
+    const jobRecord = jobStore.find(j => j.name === name);
+    if (jobRecord) {
+        helloWorldJob(jobRecord);
+        return true;
+    }
+    return false;
+}
+
+function deleteJob(name) {
+    const index = jobStore.findIndex(j => j.name === name);
+    if (index === -1) return false;
+
+    const jobRecord = jobStore[index];
+    if (jobRecord.job) {
+        jobRecord.job.cancel();
+    }
+
+    jobStore.splice(index, 1);
+    return true;
+}
 module.exports = { scheduleJob, listJobs };
