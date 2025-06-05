@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Scheduler</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        form { margin-bottom: 30px; }
+        label { display: block; margin-top: 10px; }
+        input, select { padding: 6px; width: 250px; }
+        table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
+    </style>
+    <script>
+        const toggleInputs = () => {
+            const type = document.getElementById('type').value;
+            document.getElementById('timeField').style.display = type === 'hourly' ? 'block' : 'block';
+            document.getElementById('dayField').style.display = type === 'weekly' ? 'block' : 'none';
+            document.getElementById('timeLabel').innerText = type === 'hourly' ? 'Minute (0-59)' : 'Time (HH:MM)';
+        };
+    </script>
+</head>
+<body>
+    <h1>Job Scheduler</h1>
+
+    <form action="/jobs" method="POST" oninput="toggleInputs()">
+        <label for="name">Job Name</label>
+        <input type="text" name="name" required />
+
+        <label for="type">Type</label>
+        <select name="type" id="type" required onchange="toggleInputs()">
+            <option value="">-- Select Type --</option>
+            <option value="hourly">Hourly</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+        </select>
+
+        <div id="timeField">
+            <label id="timeLabel" for="time">Time</label>
+            <input type="text" name="time" placeholder="e.g., 15 or 14:30" required />
+        </div>
+
+        <div id="dayField" style="display:none;">
+            <label for="dayOfWeek">Day of Week (0=Sun, 6=Sat)</label>
+            <input type="number" name="dayOfWeek" min="0" max="6" />
+        </div>
+
+        <label for="output">Output</label>
+        <select name="output" required>
+            <option value="console">Console</option>
+            <option value="file">File</option>
+        </select>
+
+        <br><br>
+        <button type="submit">Create Job</button>
+    </form>
+
+    <h2>Scheduled Jobs</h2>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Next Run</th>
+        </tr>
+        <% jobs.forEach(job => { %>
+            <tr>
+                <td><%= job.name %></td>
+                <td><%= job.type %></td>
+                <td><%= job.nextRun %></td>
+            </tr>
+        <% }); %>
+    </table>
+</body>
+</html>
