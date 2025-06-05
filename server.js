@@ -52,6 +52,7 @@ app.post('/schedule', (req, res) => {
 console.log('Current system time:', new Date().toString());
 console.log('Current timezone:', Intl.DateTimeFormat().resolvedOptions().timeZone);
 
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Scheduler running on port ${PORT}`));
+app.listen(3000, () => {
+    console.log("Listeninig on port 3000");
+})
 
